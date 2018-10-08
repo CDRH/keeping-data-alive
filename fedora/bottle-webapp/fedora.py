@@ -36,17 +36,74 @@ def index(container=""):
         parent = ""
 
     containers = []
+    dae = json = log = mtl = obj = rpk = None
+
     g = rdflib.Graph()
     g.parse(fedora +"/"+ container)
-    for subj, pred, obj in g:
+    dae = json = log = mtl = obj = rpk = None
+    for subj, pred, ob in g:
         if pred == ldp["#contains"]:
-            path = re.sub(fedora, "", obj)
+            path = re.sub(fedora, "", ob)
             containers.append(path)
+
+            # Identify 3D model files
+            if dae == None:
+              dae = re.search("\.dae$", ob)
+              if dae != None:
+                  dae = dae.string
+
+            if json == None:
+              json = re.search("\.json$", ob)
+              if json != None:
+                  json = json.string
+
+            if log == None:
+              log = re.search("\.log$", ob)
+              if log != None:
+                  log = log.string
+
+            if mtl == None:
+              mtl = re.search("\.mtl$", ob)
+              if mtl != None:
+                  mtl = mtl.string
+
+            if obj == None:
+              obj = re.search("\.obj$", ob)
+              if obj != None:
+                  obj = obj.string
+
+            if rpk == None:
+              rpk = re.search("\.rpk$", ob)
+              if rpk != None:
+                  rpk = rpk.string
+
+    # Prepare model dict for use in view
+    if (dae != None) or (mtl != None and obj != None):
+        model = {}
+
+        if dae != None:
+            model["dae"] = dae
+
+        if json != None:
+            model["json"] = json
+
+        if log != None:
+            model["log"] = log
+
+        if (mtl != None and obj != None):
+            model["mtl"] = mtl
+            model["obj"] = obj
+
+        if rpk != None:
+            model["rpk"] = rpk
+    else:
+        model = None
 
     return dict(
         fedora=fedora,
         container=container,
         containers=containers,
+        model=model,
         parent=parent
     )
 

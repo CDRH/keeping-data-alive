@@ -48,5 +48,50 @@
         %end
       </ul>
     </p>
+
+    %if model != None:
+      <div>
+        <h2>3D View</h2>
+        <div>
+        </div>
+
+        <h3>Files</h3>
+        <ul>
+          <li>
+            <strong>Model File(s):</strong>
+            <ul>
+              %if model.has_key("dae"):
+                <li>{{model["dae"]}}</li>
+              %end
+              %if model.has_key("mtl") and model.has_key("obj"):
+                <li>{{model["mtl"]}}</li>
+                <li>{{model["obj"]}}</li>
+              %end
+             </ul>
+          </li>
+          %if model.has_key("json"):
+            <li>
+              <strong>Metadata:</strong>
+              <ul>
+                <li>{{model["json"]}}</li>
+              </ul>
+            </li>
+          %end
+          %if model.has_key("log") or model.has_key("rpk"):
+            <li>
+              <strong>City Engine Data:</strong>
+              <ul>
+                %if model.has_key("log"):
+                  <li>{{model["log"]}}</li>
+                %end
+                %if model.has_key("rpk"):
+                  <li>{{model["rpk"]}}</li>
+                %end
+              </ul>
+            </li>
+          %end
+        </ul>
+      </div>
+    %end
   </body>
 </html>
