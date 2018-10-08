@@ -23,11 +23,15 @@ def index(container=""):
     ldp = app.config["ldp"]
 
     if container != "":
-        child = re.search("\/\w+$", container)
+        # Allow alpha-nums, underscores, spaces, percents, periods, and hyphens
+        child = re.search("\/[\w %.-]+$", container)
         if child != None:
             parent = re.sub("{0}$".format(child.group(0)), "", container)
         else:
             parent = ""
+
+        # Handle space (%20) encoding
+        container = re.sub(" ", "%20", container)
     else:
         parent = ""
 
