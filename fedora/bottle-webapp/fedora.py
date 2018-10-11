@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-from bottle import route, run, template, view
+from bottle import route, run, static_file, template, view
 import bottle
+import os
 import rdflib
 import re
 
@@ -15,6 +16,11 @@ app.config["ldp"] = rdflib.Namespace("http://www.w3.org/ns/ldp")
 
 # Routes
 # ------
+@route("/js/<filepath:path>")
+def js(filepath):
+    js_path = os.path.dirname(os.path.realpath(__file__)) +"/js"
+    return static_file(filepath, root=js_path)
+
 @route("/")
 @route("/<container:path>")  # :path captures whole value including /'s
 @view("index")
