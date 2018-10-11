@@ -20,6 +20,9 @@
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
       src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     ></script>
+    <script src="/js/lib/three.min.js"></script>
+    <script src="/js/lib/OrbitControls.js"></script>
+    <script src="/js/three-viewer.js"></script>
     <title>
       Fedora Viewer
     </title>
@@ -55,47 +58,78 @@
     </p>
 
     %if model != None:
-      <div>
-        <h2>3D View</h2>
-        <div>
+      <div class="row">
+        <div class="col-md-6">
+          <h2>3D View</h2>
+          <div class="well model-viewer">
+          </div>
+
+          <h3>Controls:</h3>
+          <p>
+            Left-click and drag to pan the camera<br>
+            Right-click and drag to move the camera's focal point<br>
+            Scroll the mouse wheel to zoom in and out
+          </p>
         </div>
 
-        <h3>Files</h3>
-        <ul>
-          <li>
-            <strong>Model File(s):</strong>
-            <ul>
-              %if model.has_key("dae"):
-                <li>{{model["dae"]}}</li>
-              %end
-              %if model.has_key("mtl") and model.has_key("obj"):
-                <li>{{model["mtl"]}}</li>
-                <li>{{model["obj"]}}</li>
-              %end
-             </ul>
-          </li>
-          %if model.has_key("json"):
+        <div class="col-md-6">
+          <h3>Files</h3>
+          <ul>
             <li>
-              <strong>Metadata:</strong>
+              <strong>Model File(s):</strong>
               <ul>
-                <li>{{model["json"]}}</li>
-              </ul>
-            </li>
-          %end
-          %if model.has_key("log") or model.has_key("rpk"):
-            <li>
-              <strong>City Engine Data:</strong>
-              <ul>
-                %if model.has_key("log"):
-                  <li>{{model["log"]}}</li>
+                %if model.has_key("dae"):
+                  <li class="dae">{{model["dae"]}}</li>
                 %end
-                %if model.has_key("rpk"):
-                  <li>{{model["rpk"]}}</li>
+                %if model.has_key("obj"):
+                  <li class="obj">{{model["obj"]}}</li>
                 %end
-              </ul>
+               </ul>
             </li>
-          %end
-        </ul>
+            %if model.has_key("jpg") or model.has_key("mtl") or model.has_key("png"):
+              <li>
+                <strong>Texture File(s):</strong><br>
+                Note: TIFFs are not supported by Three.js
+                <ul>
+                  %if model.has_key("jpg"):
+                    %for jpg in model["jpg"]:
+                      <li class="jpg">{{jpg}}</li>
+                    %end
+                  %end
+                  %if model.has_key("mtl"):
+                    <li class="mtl">{{model["mtl"]}}</li>
+                  %end
+                  %if model.has_key("png"):
+                    %for png in model["png"]:
+                      <li class="png">{{png}}</li>
+                    %end
+                  %end
+                </ul>
+              </li>
+            %end
+            %if model.has_key("json"):
+              <li>
+                <strong>Metadata:</strong>
+                <ul>
+                  <li>{{model["json"]}}</li>
+                </ul>
+              </li>
+            %end
+            %if model.has_key("log") or model.has_key("rpk"):
+              <li>
+                <strong>City Engine Data:</strong>
+                <ul>
+                  %if model.has_key("log"):
+                    <li>{{model["log"]}}</li>
+                  %end
+                  %if model.has_key("rpk"):
+                    <li>{{model["rpk"]}}</li>
+                  %end
+                </ul>
+              </li>
+            %end
+          </ul>
+        </div>
       </div>
     %end
   </body>
