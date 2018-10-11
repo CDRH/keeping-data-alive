@@ -12,7 +12,8 @@ This workflow exports generated objects from CityEngine to be used with the Keep
 
 ## Installation
 
-Open the CityEngine Navigator pane.  Drag the `export_to_kda.py` script into the workspace's "scripts" directory and select "Copy files" when a dialogue box appears. The script was designed to rely on only modules available by default within the CityEngine python environment, so no further installation steps are required.
+Open the CityEngine Navigator pane.  Download the export_to_kda.py script and drag it into the workspace's "scripts" directory.  Select "Copy files" when a dialogue box appears. The script was designed to rely on only modules available by default within the CityEngine python environment, so no further installation steps are required.
+
 
 
 ![file organization overview with python script in scripts directory](images/cityengine_script_location.png)
