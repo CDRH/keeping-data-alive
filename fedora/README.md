@@ -11,7 +11,7 @@
     - [RDFLib](#rdflib)
   - [Bottle](#bottle)
 - [Usage](#usage)
-  - [Fedora](#fedora)
+  - [Fedora](#fedora-1)
     - [Adding Data](#adding-data)
     - [Deleting Data](#deleting-data)
   - [Scripts](#scripts)
@@ -203,6 +203,11 @@ Command line script to print out containers from Fedora repository
 
 `./read_fedora.py [container_path(default="/")]`
 
+Running the script with no argument will display the containers present at the root of the Fedora repository. The script will print a message suggesting how to pass container paths in this case.
+
+This script was written to determine how to retrieve information from the Fedora repository based on RDF relationships. The python RDFLib library understands multiple RDF formats, including the Turtle format returned to requests to Fedora. This script only prints the objects of tuples which use one Turtle predicate, `ldp#contains`, but the code could easily be modified to handle other RDF relationships including those from PCDM, Dublin Core, and Europeana Data Model. The code written to parse the Turtle responses is based on the [RDFLib Getting Started](https://rdflib.readthedocs.io/en/stable/gettingstarted.html) examples.
+
+Note the script is not programmed to handle paths for Binary resources, such as 3D model, image, and text files. Entering paths for these will result in an error like `rdflib.plugin.PluginException: No plugin registered for (image/tiff, <class 'rdflib.parser.Parser'>)`.
 
 ### Bottle Webapp
 Bottle web app to browse Fedora repository containers
@@ -210,3 +215,9 @@ Bottle web app to browse Fedora repository containers
 `./fedora.py`
 
 Visit `http://localhost:3000`
+
+The Bottle web app was written to demonstrate the ability to retrieve and browse the same RDF data from Fedora, as well as identify 3D model files and render them for viewing within a browser. The page was written with Bootstrap so it is mobile-friendly.
+
+Rendering the 3D models is achieved by parsing the list of resources within a LDP container for identifiers indicating file types by extensions, e.g. `.dae`, `.obj`, `.jpg`, `.json`, etc. When a `.dae` or `.obj` file is encountered, the page will render a [ThreeJS](https://threejs.org) viewer and load the model and any accompanying textures. Collada (`.dae`) files contain paths to their textures and ThreeJS will load them automatically. `.obj` files however use an addition `.mtl` file to render their textures. ThreeJS supports loading textures for application to `.obj` models, but this has not been implemented yet. In the mean time, all image texture files present alongside a `.obj` file are loaded and randomly applied to the faces of the model.
+
+The Bottle web app also is not programmed to handle loading Binary resources when requested through the buttons used to browse the Fedora repository. Clicking these links will return `Error: 500 Internal Server Error` messages.
