@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-suburi="{{suburi}}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script
-		  crossorigin="anonymous"
-		  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-		  src="https://code.jquery.com/jquery-3.3.1.min.js"
-	  ></script>
+      crossorigin="anonymous"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      src="https://code.jquery.com/jquery-3.3.1.min.js"
+    ></script>
     <link
       crossorigin="anonymous"
       href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -20,9 +20,9 @@
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
       src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
     ></script>
-    <script src="/js/lib/three.min.js"></script>
-    <script src="/js/lib/OrbitControls.js"></script>
-    <script src="/js/three-viewer.js"></script>
+    <script src="{{suburi}}/js/lib/three.min.js"></script>
+    <script src="{{suburi}}/js/lib/OrbitControls.js"></script>
+    <script src="{{suburi}}/js/three-viewer.js"></script>
     <title>
       Fedora Viewer
     </title>
@@ -38,7 +38,7 @@
     %if container != "":
       <p>
         <strong>Parent:</strong>
-        <a class="btn btn-warning" href="/{{parent}}">/{{parent}}</a>
+        <a class="btn btn-warning" href="{{suburi}}/{{parent}}">/{{parent}}</a>
       </p>
     %end
 
@@ -49,7 +49,7 @@
       <ul>
         %for c in containers:
           <li>
-            <a class="btn btn-primary" href="{{c}}">
+            <a class="btn btn-primary" href="{{suburi}}{{c}}">
               {{c}}
             </a>
           </li>

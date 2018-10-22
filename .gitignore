@@ -107,3 +107,6 @@ venv.bak/
 
 # Except JS libraries added for three.js
 !fedora/bottle-webapp/js/lib
+
+# Ignore settings file
+fedora/bottle-webapp/settings.ini
