@@ -17,6 +17,8 @@
   - [Scripts](#scripts)
     - [read_fedora.py](#read_fedorapy)
   - [Bottle Webapp](#bottle-webapp)
+    - [Standalone](#standalone)
+    - [WSGI](#wsgi)
 
 ## Server Software
 
@@ -212,12 +214,49 @@ Note the script is not programmed to handle paths for Binary resources, such as 
 ### Bottle Webapp
 Bottle web app to browse Fedora repository containers
 
-`./fedora.py`
+The web app may be run as a standalone program served at port 3000 (typically for local development), or via a WSGI-compatible web server such as via Apache + mod_wsgi.
 
-Visit `http://localhost:3000`
+The app may be configured to serve from a sub-URI by defining the sub-URI in a `settings.ini` file placed in the same directory as the example `settings.example.ini` file and `app.wsgi`. If `settings.ini` is not present, the app will assume it is running at the root of the host's web space.
+
+#### Standalone
+`./run.py`
+
+Logging and errors are output to this terminal.
+
+Visit `http://localhost:3000`.
+
+#### WSGI
+The web app will deploy to any WSGI-compatible web server.
+
+We provide an example configuration of serving the app at the `/fedora-viewer/` sub-URI via Apache + mod_wsgi here:
+
+`settings.ini`:
+```ini
+[fedora]
+suburi=fedora-viewer
+```
+
+```conf
+RedirectMatch ^/fedora-viewer$ /fedora-viewer/
+
+WSGIDaemonProcess fedora user=apache group=apache processes=1 threads=5
+WSGIScriptAlias /fedora-viewer /var/local/www/python/keeping-data-alive/fedora/bottle-webapp/app.wsgi
+
+<Location /fedora-viewer/>
+  Require all granted
+</Location>
+
+<Directory /var/local/www/python/keeping-data-alive/fedora/bottle-webapp>
+  WSGIProcessGroup fedora
+  WSGIApplicationGroup %{GLOBAL}
+
+  Require all granted
+</Directory>
+```
+
 
 The Bottle web app was written to demonstrate the ability to retrieve and browse the same RDF data from Fedora, as well as identify 3D model files and render them for viewing within a browser. The page was written with Bootstrap so it is mobile-friendly.
 
-Rendering the 3D models is achieved by parsing the list of resources within a LDP container for identifiers indicating file types by extensions, e.g. `.dae`, `.obj`, `.jpg`, `.json`, etc. When a `.dae` or `.obj` file is encountered, the page will render a [ThreeJS](https://threejs.org) viewer and load the model and any accompanying textures. Collada (`.dae`) files contain paths to their textures and ThreeJS will load them automatically. `.obj` files however use an addition `.mtl` file to render their textures. ThreeJS supports loading textures for application to `.obj` models, but this has not been implemented yet. The necessary [MTLLoader.js](https://github.com/CDRH/keeping-data-alive/blob/master/fedora/bottle-webapp/js/lib/MTLLoader.js) library has been included in the [JavaScript files](https://github.com/CDRH/keeping-data-alive/tree/master/fedora/bottle-webapp/js/lib) and implementation would be based on the [ThreeJS OBJLoader + MTLLoader example](https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html). In the mean time, all image texture files present alongside a `.obj` file are loaded and randomly applied to the faces of the model. Note that TIFF images are not supported by ThreeJS.
+Rendering the 3D models is achieved by parsing the list of resources within a LDP container for identifiers indicating file types by extensions, e.g. `.dae`, `.obj`, `.jpg`, `.json`, etc. When a `.dae` or `.obj` file is encountered, the page will render a [three.js](https://threejs.org) viewer and load the model and any accompanying textures. Collada (`.dae`) files contain paths to their textures and three.js will load them automatically. `.obj` files however use an addition `.mtl` file to render their textures. three.js supports loading textures for application to `.obj` models, but this has not been implemented yet. The necessary [MTLLoader.js](https://github.com/CDRH/keeping-data-alive/blob/master/fedora/bottle-webapp/js/lib/MTLLoader.js) library has been included in the [JavaScript files](https://github.com/CDRH/keeping-data-alive/tree/master/fedora/bottle-webapp/js/lib) and implementation would be based on the [three.js OBJLoader + MTLLoader example](https://github.com/mrdoob/three.js/blob/master/examples/webgl_loader_obj_mtl.html). In the mean time, all image texture files present alongside a `.obj` file are loaded and randomly applied to the faces of the model. Note that TIFF images are not supported by three.js.
 
 The Bottle web app also is not programmed to handle loading Binary resources when requested through the buttons used to browse the Fedora repository. Clicking these links will return `Error: 500 Internal Server Error` messages.
