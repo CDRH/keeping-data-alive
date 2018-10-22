@@ -4,6 +4,9 @@
 // https://github.com/mrdoob/three.js/blob/dev/examples/webgl_loader_collada_skinning.html
 
 $(function () {
+  // Determine app sub-URI
+  suburi = $("html").data("suburi");
+
   // Check if a 3D model is present
   if ($(".dae").length > 0 || $(".obj").length > 0) {
     // Common variables
@@ -42,7 +45,7 @@ $(function () {
 
       // If no texture from Fedora, use local default
       if (! images.length) {
-        textures = [textureLoader.load("/raw/unknowntexture.png")];
+        textures = [textureLoader.load(suburi +"/raw/unknowntexture.png")];
       }
       else {
         for (var i in images) {
@@ -116,7 +119,7 @@ $(function () {
 
     // Determine model loader to use
     if ($(".dae").length > 0) {
-      $.getScript("/js/lib/ColladaLoader.js", function () {
+      $.getScript(suburi +"/js/lib/ColladaLoader.js", function () {
         // Model and Textures
         // ColladaLoader handles textures internally
         var loader = new THREE.ColladaLoader( manager );
@@ -129,7 +132,7 @@ $(function () {
       });
     }
     else if ($(".obj").length > 0) {
-      $.getScript("/js/lib/OBJLoader.js", function () {
+      $.getScript(suburi +"/js/lib/OBJLoader.js", function () {
         // Textures
         loadTextures();
 

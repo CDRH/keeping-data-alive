@@ -13,6 +13,12 @@ app = bottle.default_app()
 app.config["fedora"] = "http://cdrhdev1.unl.edu/fedora/rest"
 app.config["ldp"] = rdflib.Namespace("http://www.w3.org/ns/ldp")
 
+app.config.load_config('settings.ini')
+if app.config.has_key("fedora.suburi"):
+    suburi = "/"+ app.config["fedora.suburi"].lstrip("/")
+else:
+    suburi = ""
+
 
 # Routes
 # ------
@@ -142,7 +148,8 @@ def index(container=""):
         container=container,
         containers=containers,
         model=model,
-        parent=parent
+        parent=parent,
+        suburi=suburi
     )
 
 # Prevents 500 error log spam from browser requests
@@ -150,4 +157,3 @@ def index(container=""):
 def favicon():
     return ""
 
-run(debug=True, host="localhost", port=3000, reloader=True)
