@@ -7,7 +7,7 @@ import re
 
 # Defaults
 # --------
-fedora = "https://cdrhdev1.unl.edu/fedora/rest"
+fedora = "http://localhost:8080/fedora/rest"
 LDP = rdflib.Namespace("http://www.w3.org/ns/ldp")
 
 

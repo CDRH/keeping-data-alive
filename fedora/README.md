@@ -22,6 +22,11 @@
 
 ## Server Software
 
+Note these instructions are intended to help set up this proof of concept
+software environment on your own development machine or server. This is why we
+use example URLs like http://localhost:8080/ and http://host.domain.tld/, which
+may differ for your environment.
+
 ### Apache Tomcat
 We used Tomcat 8.5 to deploy the Fedora web application.
 
@@ -45,6 +50,12 @@ DNF/YUM|APT|[Homebrew](https://brew.sh/)
 [Fedora Downloads](https://duraspace.org/fedora/download/)
 
 We used the "Web Application" variant of [Fedora 4.7.5](https://github.com/fcrepo4/fcrepo4/releases/download/fcrepo-4.7.5/fcrepo-webapp-4.7.5.war)
+
+Note that the name of this `.war` file determines which sub-URI of Apache Tomcat
+the Fedora Repository software will be accessible at when deployed. We recommend
+renaming the file to `fedora.war` before moving it into Tomcat's `webapps/`
+directory for this reason. This will result in the Fedora Repository being
+accessible at http://localhost:8080/fedora/, like in our example URLs.
 
 [Fedora Installation Instructions](https://wiki.duraspace.org/display/FEDORA475/Deploying+Fedora+4+Complete+Guide#DeployingFedora4CompleteGuide-DeployingwithTomcat7)
 
@@ -203,6 +214,14 @@ Now, if one tries to visit the URL `/fedora/rest/derp`, a Tomcat 404 error page 
 #### read_fedora.py
 Command line script to print out containers from Fedora repository
 
+Near the top of the script, ensure this line defines the URL at which your
+Fedora Repository is accessible:
+```
+fedora = "http://localhost:8080/fedora/rest"
+```
+
+Then run the script as follows:
+
 `./read_fedora.py [container_path(default="/")]`
 
 Running the script with no argument will display the containers present at the root of the Fedora repository. The script will print a message suggesting how to pass container paths in this case.
@@ -215,6 +234,12 @@ Note the script is not programmed to handle paths for Binary resources, such as 
 Bottle web app to browse Fedora repository containers
 
 The web app may be run as a standalone program served at port 3000 (typically for local development), or via a WSGI-compatible web server such as via Apache + mod_wsgi.
+
+Near the top of `fedora.py`, ensure this line defines the URL at which your
+Fedora Repository is accessible:
+```
+app.config["fedora"] = "http://localhost:8080/fedora/rest"
+```
 
 The app may be configured to serve from a sub-URI by defining the sub-URI in a `settings.ini` file placed in the same directory as the example `settings.example.ini` file and `app.wsgi`. If `settings.ini` is not present, the app will assume it is running at the root of the host's web space.
 

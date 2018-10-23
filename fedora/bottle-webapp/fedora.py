@@ -10,7 +10,7 @@ import re
 # Config
 # ------
 app = bottle.default_app()
-app.config["fedora"] = "http://cdrhdev1.unl.edu/fedora/rest"
+app.config["fedora"] = "http://localhost:8080/fedora/rest"
 app.config["ldp"] = rdflib.Namespace("http://www.w3.org/ns/ldp")
 
 app.config.load_config('settings.ini')
